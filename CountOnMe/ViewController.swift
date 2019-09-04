@@ -26,30 +26,24 @@ class ViewController: UIViewController {
         guard let numberText = sender.title(for: .normal) else {
             return
         }
-        
-        if calculate.expressionHaveResult {
-           calculate.operationString = ""
+           calculate.addNumber(numberText)
            textView.text = calculate.operationString
-        }
         
-        calculate.operationString.append(numberText)
-        textView.text = calculate.operationString
     }
     
     @IBAction func tappedAdditionButton(_ sender: UIButton) {
-        if calculate.canAddOperator {
-           calculate.operationString.append(" + ")
-           textView.text = calculate.operationString
-        } else {
-            let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)
-            alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            self.present(alertVC, animated: true, completion: nil)
-        }
+       calculate.addOperator("+")
+      
+      let name = Notification.Name(rawValue: "operation")
+      NotificationCenter.default.addObserver(self, selector: #selector(operation), name: name, object: nil)
     }
+  @objc func operation(){
+    
+  }
     
     @IBAction func tappedSubstractionButton(_ sender: UIButton) {
         if calculate.canAddOperator {
-           calculate.operationString.append(" - ")
+           calculate.operationString.append("-")
            textView.text = calculate.operationString
         } else {
             let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)
@@ -70,27 +64,7 @@ class ViewController: UIViewController {
             alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
             return self.present(alertVC, animated: true, completion: nil)
         }
-        
-        // Create local copy of operations
-        var operationsToReduce = calculate.elements
-        
-        // Iterate over operations while an operand still here
-        while operationsToReduce.count > 1 {
-            let left = Int(operationsToReduce[0])!
-            let operand = operationsToReduce[1]
-            let right = Int(operationsToReduce[2])!
-            
-            let result: Int
-            switch operand {
-            case "+": result = left + right
-            case "-": result = left - right
-            default: fatalError("Unknown operator !")
-            }
-            
-            operationsToReduce = Array(operationsToReduce.dropFirst(3))
-            operationsToReduce.insert("\(result)", at: 0)
-        }
-        calculate.operationString.append(" = \(operationsToReduce.first!)")
+        calculate.performCalculate()
         textView.text = calculate.operationString
     }
 

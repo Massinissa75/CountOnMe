@@ -32,10 +32,48 @@ class Calculate {
     return operationString.firstIndex(of: "=") != nil
   }
   
-  func addition(_number: String){
-
-    if canAddOperator {
-       operationString.append(" + ")
+  func addNumber(_ number: String){
+   
+    if expressionHaveResult {
+       operationString = ""
+    }
+       operationString.append(number)
+  }
+  func performCalculate(){
+    
+    // Create local copy of operations
+    var operationsToReduce = self.elements
+    
+    // Iterate over operations while an operand still here
+    while operationsToReduce.count > 1 {
+      let left = Int(operationsToReduce[0])!
+      let operand = operationsToReduce[1]
+      let right = Int(operationsToReduce[2])!
+      
+      let result: Int
+      switch operand {
+      case "+": result = left + right
+      case "-": result = left - right
+      default: fatalError("Unknown operator !")
+      }
+      
+      operationsToReduce = Array(operationsToReduce.dropFirst(3))
+      operationsToReduce.insert("\(result)", at: 0)
+    }
+    self.operationString.append(" = \(operationsToReduce.first!)")
+  }
+  func addOperator(_ operator: String){
+    
+    let name = Notification.Name(rawValue: "operation" )
+    let notification = Notification(name: name)
+    NotificationCenter.default.post(notification)
+    if self.canAddOperator {
+       self.operationString.append(" + ")
+     
+    } else {
+      //let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)
+      //alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+      //self.present(alertVC, animated: true, completion: nil)
     }
   }
 }
