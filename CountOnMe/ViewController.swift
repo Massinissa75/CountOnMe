@@ -12,7 +12,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var textView: UITextView!
     @IBOutlet var numberButtons: [UIButton]!
   
-    let calculate = Calculate()
+  var operationType = " "
+  let calculate = Calculate()
     
     // View Life cycles
     override func viewDidLoad() {
@@ -32,18 +33,21 @@ class ViewController: UIViewController {
     }
     
     @IBAction func tappedAdditionButton(_ sender: UIButton) {
-       calculate.addOperator("+")
+       calculate.addOperator(" + ")
       
       let name = Notification.Name(rawValue: "operation")
-      NotificationCenter.default.addObserver(self, selector: #selector(operation), name: name, object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(operation(_ :)), name: name, object: nil)
     }
-  @objc func operation(){
+  // notification func
+  @objc func operation(_ notification: Notification){
     
+    calculate.operationString.append(operationType)
+    textView.text = calculate.operationString
   }
     
     @IBAction func tappedSubstractionButton(_ sender: UIButton) {
         if calculate.canAddOperator {
-           calculate.operationString.append("-")
+           calculate.operationString.append(" - ")
            textView.text = calculate.operationString
         } else {
             let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)

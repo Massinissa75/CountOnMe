@@ -50,10 +50,10 @@ class Calculate {
       let operand = operationsToReduce[1]
       let right = Int(operationsToReduce[2])!
       
-      let result: Int
+      let result: Double
       switch operand {
-      case "+": result = left + right
-      case "-": result = left - right
+      case "+": result = Double(left + right)
+      case "-": result = Double(left - right)
       default: fatalError("Unknown operator !")
       }
       
@@ -62,11 +62,14 @@ class Calculate {
     }
     self.operationString.append(" = \(operationsToReduce.first!)")
   }
+  
+  // notification
   func addOperator(_ operator: String){
     
     let name = Notification.Name(rawValue: "operation" )
     let notification = Notification(name: name)
     NotificationCenter.default.post(notification)
+    
     if self.canAddOperator {
        self.operationString.append(" + ")
      
