@@ -7,7 +7,8 @@
 //
 
 import XCTest
-@testable import SimpleCalc
+@testable import CountOnMe
+
 
 class SimpleCalcTests: XCTestCase {
 

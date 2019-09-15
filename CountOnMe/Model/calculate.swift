@@ -8,9 +8,21 @@
 
 import Foundation
 
+extension Notification.Name {
+  static let expressionIsCorrect = Notification.Name("Entrez une expression correcte !")
+  static let expressionHaveEnoughElement = Notification.Name("Démarrez un nouveau calcul !")
+  static let expressionHaveResult = Notification.Name("completedLengthyDownload")
+}
+
+
 class Calculate {
   
-  var operationString: String = "1 + 1 = 2"
+  var operationString: String = "1 + 1 = 2"{
+    didSet{
+      NotificationCenter.default.post(name: NSNotification.Name(rawValue:"notificationsString"), object: nil)
+      
+    }
+  }
   var elements: [String] {
     return operationString.split(separator: " ").map { "\($0)" }
   }
@@ -39,7 +51,25 @@ class Calculate {
     }
        operationString.append(number)
   }
+  
+  
   func performCalculate(){
+    
+    guard self.expressionIsCorrect else {
+      
+      NotificationCenter.default.post(name: NSNotification.Name(rawValue:"Entrez une expression correcte !"), object: nil)
+    return
+    }
+  
+    guard self.expressionHaveEnoughElement else {
+        
+     NotificationCenter.default.post(name: NSNotification.Name(rawValue:"Démarrez un nouveau calcul !"), object: nil)
+    return
+    }
+  
+    
+    
+
     
     // Create local copy of operations
     var operationsToReduce = self.elements
@@ -56,7 +86,6 @@ class Calculate {
       case "-": result = Double(left - right)
       default: fatalError("Unknown operator !")
       }
-      
       operationsToReduce = Array(operationsToReduce.dropFirst(3))
       operationsToReduce.insert("\(result)", at: 0)
     }
@@ -64,19 +93,30 @@ class Calculate {
   }
   
   // notification
-  func addOperator(_ operator: String){
+  func sendNotification (name: String){
     
-    let name = Notification.Name(rawValue: "operation" )
+    let name = Notification.Name(rawValue: "sendNotification" )
     let notification = Notification(name: name)
     NotificationCenter.default.post(notification)
     
-    if self.canAddOperator {
-       self.operationString.append(" + ")
-     
-    } else {
-      //let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)
-      //alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-      //self.present(alertVC, animated: true, completion: nil)
+  }
+  
+  func addOperator(operators: String){
+    if canAddOperator {
+      switch operators {
+         case "+":
+            self.operationString += " + "
+         case "-":
+            self.operationString += " - "
+         case "/":
+            self.operationString += " / "
+         case "*":
+            self.operationString += " * "
+         default:
+            break
+      }
+    }else{
+       NotificationCenter.default.post(name: NSNotification.Name(rawValue:"on ne peut pas l'ajouter !"), object: nil)
     }
   }
 }
