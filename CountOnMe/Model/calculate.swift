@@ -11,9 +11,12 @@ import Foundation
 extension Notification.Name {
   static let expressionIsCorrect = Notification.Name("Entrez une expression correcte !")
   static let expressionHaveEnoughElement = Notification.Name("Démarrez un nouveau calcul !")
-  static let expressionHaveResult = Notification.Name("completedLengthyDownload")
+  static let expressionHaveResult = Notification.Name("l'expression a deja un resultat !")
+  static let error = Notification.Name("error")
 }
-
+enum CalculErrors {
+  case isIncorrect, haventEnoughElement, alreadyHaveResult
+}
 
 class Calculate {
   
@@ -56,20 +59,17 @@ class Calculate {
   func performCalculate(){
     
     guard self.expressionIsCorrect else {
-      
-      NotificationCenter.default.post(name: NSNotification.Name(rawValue:"Entrez une expression correcte !"), object: nil)
+      NotificationCenter.default.post(name: .expressionIsCorrect, object: nil)
     return
     }
-  
-    guard self.expressionHaveEnoughElement else {
-        
-     NotificationCenter.default.post(name: NSNotification.Name(rawValue:"Démarrez un nouveau calcul !"), object: nil)
+      guard self.expressionHaveEnoughElement else {
+        NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.haventEnoughElement])
     return
     }
-  
-    
-    
-
+        guard !self.expressionHaveResult else {
+          NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.alreadyHaveResult])
+      return
+    }
     
     // Create local copy of operations
     var operationsToReduce = self.elements

@@ -21,8 +21,7 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
   
       NotificationCenter.default.addObserver(self, selector: #selector(updateTextView), name: Notification.Name(rawValue: "notificationsString"), object: nil)
-      NotificationCenter.default.addObserver(self, selector: #selector(alerteNotif), name: Notification.Name(rawValue: "on ne peut pas l'ajouter !"), object: nil)
-      NotificationCenter.default.addObserver(self, selector: #selector(alerteNotif), name: .expressionHaveEnoughElement, object: nil)
+     NotificationCenter.default.addObserver(self, selector: #selector(alerteNotif), name: .error, object: nil)
     }
   
     // View actions
@@ -30,7 +29,6 @@ class ViewController: UIViewController {
         guard let numberText = sender.title(for: .normal)
         else {return}
            calculate.addNumber(numberText)
-           textView.text = calculate.operationString
     }
     
     @IBAction func tappedAdditionButton(_ sender: UIButton) {
@@ -43,7 +41,6 @@ class ViewController: UIViewController {
 
     @IBAction func tappedEqualButton(_ sender: UIButton) {
         calculate.performCalculate()
-       textView.text = calculate.operationString
     }
   
   // updating the text view 
@@ -51,9 +48,21 @@ class ViewController: UIViewController {
     textView.text = calculate.operationString
     
   }
-  @objc func alerteNotif(){
-    let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)
-    alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-    self.present(alertVC, animated: true, completion: nil)
-  }
+ 
+  @objc func alerteNotif(_ notification: Notification){
+      var message = ""
+      if let error = notification.userInfo?["error"] as? CalculErrors {
+        switch error {
+        case .isIncorrect:
+          message = " Incorrect expression !"
+        case .haventEnoughElement:
+          message = "There is no operator !"
+        case .alreadyHaveResult:
+          message = "The expression already have result !"
+        }
+      }
+      let alertVC = UIAlertController(title: "Zéro!", message: message , preferredStyle: .alert)
+      alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+      self.present(alertVC, animated: true, completion: nil)
+    }
 }
