@@ -12,6 +12,7 @@ extension Notification.Name {
   static let expressionIsCorrect = Notification.Name("Entrez une expression correcte !")
   static let expressionHaveEnoughElement = Notification.Name("Démarrez un nouveau calcul !")
   static let expressionHaveResult = Notification.Name("l'expression a deja un resultat !")
+  static let result = Notification.Name("result")
   static let error = Notification.Name("error")
 }
 enum CalculErrors {
@@ -59,7 +60,7 @@ class Calculate {
   func performCalculate(){
     
     guard self.expressionIsCorrect else {
-      NotificationCenter.default.post(name: .expressionIsCorrect, object: nil)
+      NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.isIncorrect])
     return
     }
       guard self.expressionHaveEnoughElement else {
@@ -80,10 +81,12 @@ class Calculate {
       let operand = operationsToReduce[1]
       let right = Int(operationsToReduce[2])!
       
-      let result: Double
+      let result: Int
       switch operand {
-      case "+": result = Double(left + right)
-      case "-": result = Double(left - right)
+      case "+": result = Int(left + right)
+      case "-": result = Int(left - right)
+      case "*": result = Int(left * right)
+      case "/": result = Int(left / right)
       default: fatalError("Unknown operator !")
       }
       operationsToReduce = Array(operationsToReduce.dropFirst(3))
@@ -116,7 +119,7 @@ class Calculate {
             break
       }
     }else{
-       NotificationCenter.default.post(name: NSNotification.Name(rawValue:"on ne peut pas l'ajouter !"), object: nil)
+      NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.alreadyHaveResult])
     }
   }
 }

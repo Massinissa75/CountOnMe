@@ -39,7 +39,17 @@ class ViewController: UIViewController {
         calculate.addOperator(operators: "-")
     }
 
-    @IBAction func tappedEqualButton(_ sender: UIButton) {
+  @IBAction func tappedMultiplyButton(_ sender: Any) {
+    
+    calculate.addOperator(operators: "*")
+  }
+  
+  
+  @IBAction func tappedDivideButton(_ sender: Any) {
+     calculate.addOperator(operators: "/")
+  }
+  
+  @IBAction func tappedEqualButton(_ sender: UIButton) {
         calculate.performCalculate()
     }
   

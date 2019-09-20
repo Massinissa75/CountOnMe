@@ -1,31 +1,31 @@
 //
 //  SimpleCalcTests.swift
-//  SimpleCalcTests
+//  CountOnMeTests
 //
-//  Created by Vincent Saluzzo on 29/03/2019.
+//  Created by Massinissa_theking on 18/09/2019.
 //  Copyright © 2019 Vincent Saluzzo. All rights reserved.
 //
 
 import XCTest
 @testable import CountOnMe
 
-
 class SimpleCalcTests: XCTestCase {
 
-    var calculate = Calculate()
- 
+  var calculate = Calculate()
 
     override func setUp() {
+        // Put setup code here. This method is called before the invocation of each test method in the class.
+      super.setUp()
       calculate = Calculate()
       
     }
-
-  func testAddOperato() {
-    calculate.addNumber("2")
+  
+  func testAddOperator(){
+    calculate.addNumber("1")
     calculate.addOperator(operators: "+")
-    calculate.addNumber("4")
+    calculate.addNumber("2")
     
-    XCTAssertEqual(calculate.operationString, "6")
-  }
-
+    XCTAssert(calculate.canAddOperator)
+  
+  }  
 }
