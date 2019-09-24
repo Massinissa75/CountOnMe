@@ -27,5 +27,27 @@ class SimpleCalcTests: XCTestCase {
     
     XCTAssert(calculate.canAddOperator)
   
-  }  
+  }
+  
+  func testSimpleSubstractionOperation(){
+    
+    calculate.addNumber("10")
+    calculate.addOperator(operators: "-")
+    calculate.addNumber("2")
+    calculate.performCalculate()
+    
+    XCTAssertEqual(calculate.operationString, "10 - 2 = 8")
+    XCTAssertEqual(calculate.elements.last!, "8")
+     
+  }
+  
+  func testSimpleAdditionOperation(){
+    
+    calculate.addNumber("5")
+    calculate.addOperator(operators: "+")
+    calculate.addNumber("8")
+    calculate.performCalculate()
+    XCTAssertEqual(calculate.operationString, "5 + 8 = 13")
+   
+  }
 }

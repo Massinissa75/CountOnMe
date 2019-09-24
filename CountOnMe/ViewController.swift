@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
   
-      NotificationCenter.default.addObserver(self, selector: #selector(updateTextView), name: Notification.Name(rawValue: "notificationsString"), object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(updateTextView), name: .result, object: nil)
      NotificationCenter.default.addObserver(self, selector: #selector(alerteNotif), name: .error, object: nil)
     }
   
@@ -39,19 +39,19 @@ class ViewController: UIViewController {
         calculate.addOperator(operators: "-")
     }
 
-  @IBAction func tappedMultiplyButton(_ sender: Any) {
+   @IBAction func tappedMultiplyButton(_ sender: Any) {
     
     calculate.addOperator(operators: "*")
-  }
+   }
   
   
-  @IBAction func tappedDivideButton(_ sender: Any) {
+   @IBAction func tappedDivideButton(_ sender: Any) {
      calculate.addOperator(operators: "/")
-  }
+   }
   
-  @IBAction func tappedEqualButton(_ sender: UIButton) {
+   @IBAction func tappedEqualButton(_ sender: UIButton) {
         calculate.performCalculate()
-    }
+  }
   
   // updating the text view 
   @objc func updateTextView(){

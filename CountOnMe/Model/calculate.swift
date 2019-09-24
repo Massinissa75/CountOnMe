@@ -9,21 +9,22 @@
 import Foundation
 
 extension Notification.Name {
-  static let expressionIsCorrect = Notification.Name("Entrez une expression correcte !")
-  static let expressionHaveEnoughElement = Notification.Name("Démarrez un nouveau calcul !")
-  static let expressionHaveResult = Notification.Name("l'expression a deja un resultat !")
+  
   static let result = Notification.Name("result")
   static let error = Notification.Name("error")
 }
 enum CalculErrors {
   case isIncorrect, haventEnoughElement, alreadyHaveResult
 }
+//enum Operands {
+ // case plus, minus, multiply, divide
+//}
 
 class Calculate {
   
-  var operationString: String = "1 + 1 = 2"{
+    var operationString: String = "1 + 1 = 2"{
     didSet{
-      NotificationCenter.default.post(name: NSNotification.Name(rawValue:"notificationsString"), object: nil)
+      NotificationCenter.default.post(name: .result, object: nil)
       
     }
   }
@@ -33,7 +34,7 @@ class Calculate {
   
   // Error check computed variables
   var expressionIsCorrect: Bool {
-    return elements.last != "+" && elements.last != "-"
+    return elements.last != "+" && elements.last != "-" && elements.last != "*" && elements.last != "/"
   }
   
   var expressionHaveEnoughElement: Bool {
@@ -57,36 +58,41 @@ class Calculate {
   }
   
   
+  
   func performCalculate(){
-    
+   
     guard self.expressionIsCorrect else {
       NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.isIncorrect])
     return
     }
-      guard self.expressionHaveEnoughElement else {
+    guard self.expressionHaveEnoughElement else {
         NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.haventEnoughElement])
     return
     }
-        guard !self.expressionHaveResult else {
+    guard !self.expressionHaveResult else {
           NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.alreadyHaveResult])
-      return
+    return
     }
+  
+  
+
     
     // Create local copy of operations
     var operationsToReduce = self.elements
     
     // Iterate over operations while an operand still here
     while operationsToReduce.count > 1 {
-      let left = Int(operationsToReduce[0])!
+      let left = Double(operationsToReduce[0])!
       let operand = operationsToReduce[1]
-      let right = Int(operationsToReduce[2])!
+      let right = Double(operationsToReduce[2])!
       
-      let result: Int
+      let result: Double
       switch operand {
-      case "+": result = Int(left + right)
-      case "-": result = Int(left - right)
-      case "*": result = Int(left * right)
-      case "/": result = Int(left / right)
+      case "+": result = Double(left + right)
+      case "-": result = Double(left - right)
+      case "*": result = Double(left * right)
+      case "/": result = Double(left / right)
+      case "=": result = 0
       default: fatalError("Unknown operator !")
       }
       operationsToReduce = Array(operationsToReduce.dropFirst(3))
@@ -94,6 +100,7 @@ class Calculate {
     }
     self.operationString.append(" = \(operationsToReduce.first!)")
   }
+  
   
   // notification
   func sendNotification (name: String){
@@ -105,6 +112,9 @@ class Calculate {
   }
   
   func addOperator(operators: String){
+    if expressionHaveResult {
+      self.operationString = self.elements.last!
+    }
     if canAddOperator {
       switch operators {
          case "+":
@@ -119,7 +129,8 @@ class Calculate {
             break
       }
     }else{
-      NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.alreadyHaveResult])
+      NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.isIncorrect])
     }
   }
 }
+
