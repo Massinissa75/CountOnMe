@@ -48,7 +48,6 @@ class Calculate {
   var expressionHaveResult: Bool {
     return operationString.firstIndex(of: "=") != nil
   }
-  
   func addNumber(_ number: String){
    
     if expressionHaveResult {
@@ -56,9 +55,6 @@ class Calculate {
     }
        operationString.append(number)
   }
-  
-  
-  
   func performCalculate(){
    
     guard self.expressionIsCorrect else {
@@ -86,6 +82,7 @@ class Calculate {
       let operand = operationsToReduce[1]
       let right = Double(operationsToReduce[2])!
       
+      var priorityresult : Double = 0
       let result: Double
       switch operand {
       case "+": result = Double(left + right)
@@ -100,7 +97,6 @@ class Calculate {
     }
     self.operationString.append(" = \(operationsToReduce.first!)")
   }
-  
   
   // notification
   func sendNotification (name: String){

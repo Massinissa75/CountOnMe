@@ -36,8 +36,8 @@ class SimpleCalcTests: XCTestCase {
     calculate.addNumber("2")
     calculate.performCalculate()
     
-    XCTAssertEqual(calculate.operationString, "10 - 2 = 8")
-    XCTAssertEqual(calculate.elements.last!, "8")
+    XCTAssertEqual(calculate.operationString, "10 - 2 = 8.0")
+    XCTAssertEqual(calculate.elements.last!, "8.0")
      
   }
   
@@ -47,7 +47,25 @@ class SimpleCalcTests: XCTestCase {
     calculate.addOperator(operators: "+")
     calculate.addNumber("8")
     calculate.performCalculate()
-    XCTAssertEqual(calculate.operationString, "5 + 8 = 13")
+    XCTAssertEqual(calculate.operationString, "5 + 8 = 13.0")
    
   }
+  func testGivenFirstNumberIsTwo_WhenMultiplyingWithNumberThree_ThenResultIsSix() {
+    
+      calculate.addNumber("2")
+      calculate.addOperator(operators: "*")
+      calculate.addNumber("3")
+      calculate.performCalculate()
+      
+      XCTAssertEqual(calculate.elements.last!, "6.0")
+  }
+  func testGivenFirstNumberIsTen_WhenDividingByNumberTwo_ThenResultIsFive() {
+      calculate.addNumber("10")
+      calculate.addOperator(operators: "/")
+      calculate.addNumber("2")
+      calculate.performCalculate()
+          
+      XCTAssertEqual(calculate.elements.last!, "5.0")
+  }
 }
+
