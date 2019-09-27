@@ -67,5 +67,11 @@ class SimpleCalcTests: XCTestCase {
           
       XCTAssertEqual(calculate.elements.last!, "5.0")
   }
+  func testGivenFirstNumberIsFour_WhenTappeResetButton_ThenZeroIsDisplayed() {
+    calculate.addNumber("4")
+    calculate.reset()
+    
+    XCTAssertEqual(calculate.elements.last!, "0")
+  }
 }
 

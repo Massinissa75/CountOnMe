@@ -28,6 +28,7 @@ class ViewController: UIViewController {
     @IBAction func tappedNumberButton(_ sender: UIButton) {
         guard let numberText = sender.title(for: .normal)
         else {return}
+           calculate.reset()
            calculate.addNumber(numberText)
     }
     
@@ -36,7 +37,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func tappedSubstractionButton(_ sender: UIButton) {
-        calculate.addOperator(operators: "-")
+      calculate.addOperator(operators: "-")
     }
 
    @IBAction func tappedMultiplyButton(_ sender: Any) {
@@ -46,20 +47,31 @@ class ViewController: UIViewController {
   
   
    @IBAction func tappedDivideButton(_ sender: Any) {
+    
      calculate.addOperator(operators: "/")
    }
   
    @IBAction func tappedEqualButton(_ sender: UIButton) {
+        calculate.reset()
         calculate.performCalculate()
   }
   
-  // updating the text view 
+  @IBAction func tappedResetButton(_ sender: UIButton) {
+    calculate.reset()
+    textView.text = "0"
+    operationType = " "
+  
+    
+  }
+  @IBAction func tappedCommaButton(_ sender: UIButton) {
+    
+  }
+  // updating the text view
   @objc func updateTextView(){
     textView.text = calculate.operationString
     
   }
- 
-  @objc func alerteNotif(_ notification: Notification){
+   @objc func alerteNotif(_ notification: Notification){
       var message = ""
       if let error = notification.userInfo?["error"] as? CalculErrors {
         switch error {

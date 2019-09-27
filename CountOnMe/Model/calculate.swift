@@ -48,16 +48,22 @@ class Calculate {
   var expressionHaveResult: Bool {
     return operationString.firstIndex(of: "=") != nil
   }
+  
+  func reset() {
+    if expressionHaveResult && expressionIsCorrect && expressionHaveEnoughElement {
+      self.operationString = " "
+      
+    }
+  }
+  // add number function:
   func addNumber(_ number: String){
-   
     if expressionHaveResult {
        operationString = ""
     }
        operationString.append(number)
   }
   func performCalculate(){
-   
-    guard self.expressionIsCorrect else {
+       guard self.expressionIsCorrect else {
       NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.isIncorrect])
     return
     }
@@ -69,10 +75,6 @@ class Calculate {
           NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.alreadyHaveResult])
     return
     }
-  
-  
-
-    
     // Create local copy of operations
     var operationsToReduce = self.elements
     
@@ -82,14 +84,14 @@ class Calculate {
       let operand = operationsToReduce[1]
       let right = Double(operationsToReduce[2])!
       
-      var priorityresult : Double = 0
+      //var priorityresult : Double = 0
       let result: Double
       switch operand {
       case "+": result = Double(left + right)
       case "-": result = Double(left - right)
       case "*": result = Double(left * right)
       case "/": result = Double(left / right)
-      case "=": result = 0
+      case "AC": result = 0
       default: fatalError("Unknown operator !")
       }
       operationsToReduce = Array(operationsToReduce.dropFirst(3))
@@ -100,13 +102,16 @@ class Calculate {
   
   // notification
   func sendNotification (name: String){
-    
     let name = Notification.Name(rawValue: "sendNotification" )
     let notification = Notification(name: name)
     NotificationCenter.default.post(notification)
     
   }
-  
+  // add comma :
+  func addComma() {
+    
+    
+  }
   func addOperator(operators: String){
     if expressionHaveResult {
       self.operationString = self.elements.last!
