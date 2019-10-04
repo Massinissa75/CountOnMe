@@ -28,7 +28,6 @@ class ViewController: UIViewController {
     @IBAction func tappedNumberButton(_ sender: UIButton) {
         guard let numberText = sender.title(for: .normal)
         else {return}
-           calculate.reset()
            calculate.addNumber(numberText)
     }
     
@@ -41,8 +40,9 @@ class ViewController: UIViewController {
     }
 
    @IBAction func tappedMultiplyButton(_ sender: Any) {
-    
+   
     calculate.addOperator(operators: "*")
+   
    }
   
   
@@ -52,18 +52,19 @@ class ViewController: UIViewController {
    }
   
    @IBAction func tappedEqualButton(_ sender: UIButton) {
-        calculate.reset()
+        //calculate.reset()
         calculate.performCalculate()
   }
   
   @IBAction func tappedResetButton(_ sender: UIButton) {
-    calculate.reset()
+   // calculate.reset()
+    calculate.operationString = " "
     textView.text = "0"
-    operationType = " "
-  
-    
+   // operationType = " "
+   
   }
   @IBAction func tappedCommaButton(_ sender: UIButton) {
+    calculate.operationString += "."
     
   }
   // updating the text view

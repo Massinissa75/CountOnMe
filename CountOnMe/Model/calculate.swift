@@ -49,12 +49,12 @@ class Calculate {
     return operationString.firstIndex(of: "=") != nil
   }
   
-  func reset() {
-    if expressionHaveResult && expressionIsCorrect && expressionHaveEnoughElement {
-      self.operationString = " "
+  //func reset() {
+   // if expressionHaveResult && expressionIsCorrect && expressionHaveEnoughElement {
+      //self.operationString = " "
       
-    }
-  }
+    //}
+ // }
   // add number function:
   func addNumber(_ number: String){
     if expressionHaveResult {
@@ -62,6 +62,35 @@ class Calculate {
     }
        operationString.append(number)
   }
+  func calculatePriorities(_ operationsToReduce: inout [String]) {
+          // Iterate over operations while an operand still here
+          //    while operationsToReduce.count > 1 {
+          while operationsToReduce.contains("*") || operationsToReduce.contains("/"){
+            if let index = operationsToReduce.firstIndex (where : { $0 == "*" || $0 == "/"} ) {
+                  let left = Double(operationsToReduce[index - 1])!
+                  let operand = operationsToReduce[index]
+                  let right = Double(operationsToReduce[index + 1 ])!
+  //                print(left)
+  //                print(operand)
+  //                print(right)
+  //                print()
+                  let result: Double
+                  switch operand  {
+                  case "*": result = Double(left * right)
+                  case "/": result = Double(left / right)
+                  default: fatalError("Unknown operator !")
+                  }
+  //                print(result)
+                  operationsToReduce.remove(at: index)
+                  operationsToReduce.insert("\(result)", at: index)
+                  operationsToReduce.remove(at: index - 1)
+                  operationsToReduce.remove(at: index)
+  //                print(operationsToReduce)
+                  
+              }
+          }
+      }
+  
   func performCalculate(){
        guard self.expressionIsCorrect else {
       NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.isIncorrect])
@@ -75,30 +104,32 @@ class Calculate {
           NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.alreadyHaveResult])
     return
     }
-    // Create local copy of operations
-    var operationsToReduce = self.elements
     
-    // Iterate over operations while an operand still here
-    while operationsToReduce.count > 1 {
-      let left = Double(operationsToReduce[0])!
-      let operand = operationsToReduce[1]
-      let right = Double(operationsToReduce[2])!
-      
-      //var priorityresult : Double = 0
-      let result: Double
-      switch operand {
-      case "+": result = Double(left + right)
-      case "-": result = Double(left - right)
-      case "*": result = Double(left * right)
-      case "/": result = Double(left / right)
-      case "AC": result = 0
-      default: fatalError("Unknown operator !")
+   // Create local copy of operations
+        var operationsToReduce = self.elements
+        print(operationsToReduce)
+            
+        calculatePriorities(&operationsToReduce)
+         while operationsToReduce.count > 1 {
+          let left = Double(operationsToReduce[0])!
+          let operand = operationsToReduce[1]
+          let right = Double(operationsToReduce[2])!
+          //var priorityresult : Double = 0
+          let result: Double
+          switch operand {
+          case "+": result = Double(left + right)
+          case "-": result = Double(left - right)
+    //      case "*": result = Double(left * right)
+    //      case "/": result = Double(left / right)
+    //      case "AC": result = 0
+          default: fatalError("Unknown operator !")
+          }
+          operationsToReduce = Array(operationsToReduce.dropFirst(3))
+          operationsToReduce.insert("\(result)", at: 0)
+        }
+         self.operationString.append(" = \(operationsToReduce.first!)")
       }
-      operationsToReduce = Array(operationsToReduce.dropFirst(3))
-      operationsToReduce.insert("\(result)", at: 0)
-    }
-    self.operationString.append(" = \(operationsToReduce.first!)")
-  }
+      
   
   // notification
   func sendNotification (name: String){
@@ -107,11 +138,39 @@ class Calculate {
     NotificationCenter.default.post(notification)
     
   }
-  // add comma :
-  func addComma() {
+  /*func priority() {
+    // si il ya plusieurs operations, la priorité va au "/" ou "*" ou "+"
+     
+     let operationsToReduce = self.elements
+           let lastOperator = operationsToReduce.count-2
+           let operand = operationsToReduce[lastOperator]
+           let left = Double(operationsToReduce[lastOperator-1])!
+           let right = Double(operationsToReduce[lastOperator+1])!
+           
+           switch operand {
+           case "x": priorityResult = left * right
+           case "÷": priorityResult = left / right
+           default: break
+          }
+  }*/
+    // Create local copy of operations
+      //var operationsToReduce = self.elements
+      //if let operationToReduce = operationsToReduce.firstIndex(of: "*") {
+        //let left = Double(operationsToReduce[operationToReduce-1])!
+       // let operand = operationsToReduce[operationToReduce]
+       // let right = Double(operationsToReduce[operationToReduce+1])!
+       // let result = Double(left * right)
+        
+         // operationsToReduce = [operationsToReduce.remove(at: operationToReduce-1)]
+      //}
     
-    
-  }
+         // operationsToReduce.insert("\(result)", at: operationToReduce-1)
+      
+      // ["5", "+","3","*","2","-","4"]
+      // Iterate over operations while an operand still here
+  
+  
+  
   func addOperator(operators: String){
     if expressionHaveResult {
       self.operationString = self.elements.last!

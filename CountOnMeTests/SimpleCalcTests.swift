@@ -67,11 +67,42 @@ class SimpleCalcTests: XCTestCase {
           
       XCTAssertEqual(calculate.elements.last!, "5.0")
   }
-  func testGivenFirstNumberIsFour_WhenTappeResetButton_ThenZeroIsDisplayed() {
+  /*func testGivenFirstNumberIsFour_WhenTappeResetButton_ThenZeroIsDisplayed() {
     calculate.addNumber("4")
-    calculate.reset()
+    
     
     XCTAssertEqual(calculate.elements.last!, "0")
+  }*/
+  
+  func testGivenFirstNumberIsFour_WhenAddingNumberTwoAndMultiplyingWithNumberThree_ThenResultIsTen() {
+  
+    calculate.addNumber("4")
+    calculate.addOperator(operators: "+")
+    calculate.addNumber("2")
+    calculate.addOperator(operators: "*")
+    calculate.addNumber("3")
+    calculate.performCalculate()
+    
+    XCTAssertEqual(calculate.elements.last!, "10.0")
+  }
+  func testGivenFirstNumberIsFive_WhenDividingWithNumberTwo_ThenResultIsTwoDateFive() {
+     
+       calculate.addNumber("5")
+       calculate.addOperator(operators: "/")
+       calculate.addNumber("2")
+       calculate.performCalculate()
+       
+       XCTAssertEqual(calculate.elements.last!, "2.5")
+  
+  }
+  
+  func testGivenFirstNumberIsSevenDateFive_WhenDividingWithNumberTwo_ThenResultIsFifteen() {
+      
+        calculate.addNumber("7.5")
+        calculate.addOperator(operators: "*")
+        calculate.addNumber("2")
+        calculate.performCalculate()
+        
+        XCTAssertEqual(calculate.elements.last!, "15.0")
   }
 }
-
