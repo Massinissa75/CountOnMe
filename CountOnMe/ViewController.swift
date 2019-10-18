@@ -19,7 +19,7 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
     NotificationCenter.default.addObserver(self, selector: #selector(updateTextView), name: .result, object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(alerteNotif), name: .error, object: nil)
-    }
+ }
     // View actions
   @IBAction func tappedNumberButton(_ sender: UIButton) {
         guard let numberText = sender.title(for: .normal)
@@ -42,16 +42,19 @@ class ViewController: UIViewController {
      calculate.performCalculate()
   }
   @IBAction func tappedResetButton(_ sender: UIButton) {
-    calculate.operationString = " "
-    textView.text = "0"
+       calculate.resetValue()
   }
   @IBAction func tappedCommaButton(_ sender: UIButton) {
     calculate.operationString += "."
   }
   // updating the text view
   @objc func updateTextView() {
+    if calculate.operationString.isEmpty {
+       textView.text = "0"
+    } else {
     textView.text = calculate.operationString
-  }
+    }
+ }
   @objc func alerteNotif(_ notification: Notification) {
     var message = ""
       if let error = notification.userInfo?["error"] as? CalculErrors {
@@ -62,6 +65,8 @@ class ViewController: UIViewController {
           message = "There is no operator !"
         case .alreadyHaveResult:
           message = "The expression already have result !"
+        case .zeroZero:
+          message = "Wahou! tu veux inventer la devision par zero ? !"
         }
       }
       let alertVC = UIAlertController(title: "Zéro!", message: message, preferredStyle: .alert)
