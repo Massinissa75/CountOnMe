@@ -65,11 +65,13 @@ class ViewController: UIViewController {
           message = "There is no operator !"
         case .alreadyHaveResult:
           message = "The expression already have result !"
-        case .zeroZero:
+        case .byZero:
           message = "Wahou! tu veux inventer la devision par zero ? !"
+        case .operatorIsAlredySet:
+          message = "An operator is already set !"
         }
       }
-      let alertVC = UIAlertController(title: "Zéro!", message: message, preferredStyle: .alert)
+      let alertVC = UIAlertController(title: "😳", message: message, preferredStyle: .alert)
       alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
       self.present(alertVC, animated: true, completion: nil)
   }

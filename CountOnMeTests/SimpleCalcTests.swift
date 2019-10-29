@@ -63,6 +63,16 @@ class SimpleCalcTests: XCTestCase {
     calculate.performCalculate()
     XCTAssertEqual(calculate.operationString, "5 + 8 = 13.0")
   }
+  func testOperatorOperation() {
+     calculate.addNumber("5")
+     calculate.addOperator(operators: "+")
+     calculate.addNumber("8")
+     calculate.addOperator(operators: "-")
+     calculate.addNumber("2")
+     calculate.performCalculate()
+     XCTAssertEqual(calculate.operationString, "5 + 8 - 2 = 11.0")
+     XCTAssertEqual(calculate.elements.last!, "11.0")
+   }
   func testGivenFirstNumberIsTwo_WhenMultiplyingWithNumberThree_ThenResultIsSix() {
       calculate.addNumber("2")
       calculate.addOperator(operators: "*")
@@ -165,16 +175,35 @@ class SimpleCalcTests: XCTestCase {
   let haveResult = calculate.expressionHaveResult
       XCTAssertTrue(haveResult)
   }
-  //func testExample() {
-    //   expectation(forNotification: Notification.Name("sendNotification"), object: //nil) { notification in
-          // return true
-       //}
-       //XCTAssertTrue(true)
-  //}
-  //func test_tappingLoginButton_shouldPresentAlert() {
-  //let storyboard = UIStoryboard(name: "Main", bundle: nil)
-  //let sut = storyboard.instantiateInitialViewController() as! ViewController
-  //sut.loadViewIfNeeded()
-  //sut.tappedNumberButton.sendActions(for: .touchUpInside)
-  //}
+  func testPriorities() {
+         calculate.addNumber("6")
+         calculate.addOperator(operators: "+")
+         calculate.addNumber("2")
+         calculate.addOperator(operators: "*")
+         calculate.addNumber("5")
+         calculate.addOperator(operators: "-")
+         calculate.addNumber("2")
+         calculate.addOperator(operators: "/")
+         calculate.addNumber("2")
+         calculate.performCalculate()
+         XCTAssertEqual(calculate.elements.last!, "15.0")
+   }
+  func testGivenOperationString_WhenDivisionByZeroAndCalculatePriorities_ThenHaveAnError() {
+    var operationsToReduce = ["4", "/", "0", "+", "9"]
+        calculate.calculatePriorities(&operationsToReduce)
+    XCTAssertEqual(operationsToReduce, ["0.0", "+", "9"])
+    XCTAssertEqual(calculate.operationString, "error")
+  }
+  func testGivenOperationStringWithAknownOperatio_WhenDivisionByZeroAndCalculatePriorities_ThenHaveAnError() {
+     var operationsToReduce = ["4", "m", "0", "+", "9"]
+         calculate.calculatePriorities(&operationsToReduce)
+     XCTAssertEqual(operationsToReduce, ["0.0", "+", "9"])
+     XCTAssertEqual(calculate.operationString, "error")
+   }
+  func testGivenOperationStringWithNumberAndNoOperator_WhenDivisionByZeroAndCalculatePriorities_ThenHaveAnError() {
+    var operationsToReduce = ["4", "2", "0", "+", "9"]
+        calculate.calculatePriorities(&operationsToReduce)
+    XCTAssertEqual(operationsToReduce, ["0.0", "+", "9"])
+    XCTAssertEqual(calculate.operationString, "error")
+  }
 }

@@ -13,7 +13,7 @@ extension Notification.Name {
   static let error = Notification.Name("error")
 }
 enum CalculErrors {
-  case isIncorrect, haventEnoughElement, alreadyHaveResult, zeroZero
+  case isIncorrect, haventEnoughElement, alreadyHaveResult, byZero, operatorIsAlredySet
 }
 class Calculate {
     var operationString: String = "1 + 1 = 2" {
@@ -32,7 +32,7 @@ class Calculate {
     return elements.count >= 3
   }
   var canAddOperator: Bool {
-    return elements.last != "+" && elements.last != "-"
+    return elements.last != "+" && elements.last != "-" && elements.last != "*" && elements.last != "/"
   }
   var expressionHaveResult: Bool {
     return operationString.firstIndex(of: "=") != nil
@@ -76,20 +76,22 @@ class Calculate {
         let left = Double(operationsToReduce[count - 1])!
         let operand = operationsToReduce[count]
         let right = Double(operationsToReduce[count + 1 ])!
-            if right == 0 {
-              NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.zeroZero])
-              operationString = "Error !"
-             }
     var result: Double
           switch operand {
           case "*": result = Double(left * right)
           case "/": result = Double(left / right)
           if right == 0 {
+            NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.byZero])
             operationString = "error"
+            result = 0
             }
           case "+": result = Double(left + right)
           case "-": result = Double(left - right)
-          default: fatalError("Unknown operator !")
+          default:
+            NotificationCenter.default.post(name: .error, object: nil,
+            userInfo: ["error": CalculErrors.isIncorrect])
+          operationString = "error"
+          result = 0
           }
   // print(result)
           operationsToReduce.remove(at: count)
@@ -100,12 +102,6 @@ class Calculate {
   }
   func resetValue() {
     self.operationString = ""
-  }
-  // notification
-  func sendNotification (name: String) {
-    let name = Notification.Name(rawValue: "sendNotification" )
-    let notification = Notification(name: name)
-    NotificationCenter.default.post(notification)
   }
   func addOperator(operators: String) {
     if expressionHaveResult {
@@ -125,7 +121,7 @@ class Calculate {
             break
       }
     } else {
-      NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.isIncorrect])
+      NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.operatorIsAlredySet])
     }
   }
 }
