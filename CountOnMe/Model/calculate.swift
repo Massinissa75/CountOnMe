@@ -37,14 +37,13 @@ class Calculate {
   var expressionHaveResult: Bool {
     return operationString.firstIndex(of: "=") != nil
   }
-  // add number function:
+  /// add number function:
   func addNumber(_ number: String) {
     if expressionHaveResult {
        operationString = ""
     }
        operationString.append(number)
   }
-  /// calculation logic
   func performCalculate() {
     guard self.expressionIsCorrect else {
       NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.isIncorrect])
@@ -70,7 +69,7 @@ class Calculate {
   }
   /// calculatePriorities depending on operator priority
   /*
-   parameter operatiosToReduce: inout parameter: list of operations elements
+   parameter operationsToReduce: inout parameter, list of operations elements
     and operator reduced after the calculation
  */
   func calculatePriorities(_ operationsToReduce: inout [String]) {
@@ -88,7 +87,7 @@ class Calculate {
           case "/": result = Double(left / right)
           if right == 0 {
             NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.byZero])
-            operationString = "error"
+            operationString = "Error"
             result = 0
             }
           case "+": result = Double(left + right)

@@ -66,12 +66,12 @@ class ViewController: UIViewController {
         case .alreadyHaveResult:
           message = "The expression already have result !"
         case .byZero:
-          message = "Wahou! tu veux inventer la devision par zero ? !"
+          message = "Wahou! tu veux inventer la division par zero ? !"
         case .operatorIsAlredySet:
           message = "An operator is already set !"
         }
       }
-      let alertVC = UIAlertController(title: "😳", message: message, preferredStyle: .alert)
+      let alertVC = UIAlertController(title: "", message: message, preferredStyle: .alert)
       alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
       self.present(alertVC, animated: true, completion: nil)
   }
