@@ -206,4 +206,35 @@ class SimpleCalcTests: XCTestCase {
     XCTAssertEqual(operationsToReduce, ["0.0", "+", "9"])
     XCTAssertEqual(calculate.operationString, "error")
   }
+  func testNotificationAddOperator() {
+    expectation(forNotification: NSNotification.Name(rawValue: "error"), object: nil, handler: nil)
+    calculate.operationString = "3 + 2"
+    calculate.addOperator(operators: "r")
+    waitForExpectations(timeout: 0.1, handler: nil)
+  }
+  func testNotificationExpressionHaveResult() {
+    expectation(forNotification: NSNotification.Name(rawValue: "error"), object: nil, handler: nil)
+    calculate.operationString = "3 + 2 = 5"
+    calculate.performCalculate()
+    waitForExpectations(timeout: 0.1, handler: nil)
+  }
+  func testNotificationExpressionIsCorrect() {
+    expectation(forNotification: NSNotification.Name(rawValue: "error"), object: nil, handler: nil)
+    calculate.operationString = "3 + 2 +"
+    calculate.performCalculate()
+    waitForExpectations(timeout: 0.1, handler: nil)
+  }
+  func testNotificationExpressionHaveEnoughElement() {
+    expectation(forNotification: NSNotification.Name(rawValue: "error"), object: nil, handler: nil)
+    calculate.operationString = "3 ="
+    calculate.performCalculate()
+    waitForExpectations(timeout: 0.1, handler: nil)
+  }
+  func testNotificationAddOperator2() {
+    expectation(forNotification: NSNotification.Name(rawValue: "error"), object: nil, handler: nil)
+    calculate.operationString = "3 + 2 = 5"
+    calculate.addOperator(operators: "+")
+    calculate.performCalculate()
+    waitForExpectations(timeout: 0.1, handler: nil)
+  }
 }

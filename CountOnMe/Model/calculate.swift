@@ -44,6 +44,7 @@ class Calculate {
     }
        operationString.append(number)
   }
+  /// calculation logic
   func performCalculate() {
     guard self.expressionIsCorrect else {
       NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.isIncorrect])
@@ -67,6 +68,11 @@ class Calculate {
     self.operationString.append(" = \(operationsToReduce.first!)")
     }
   }
+  /// calculatePriorities depending on operator priority
+  /*
+   parameter operatiosToReduce: inout parameter: list of operations elements
+    and operator reduced after the calculation
+ */
   func calculatePriorities(_ operationsToReduce: inout [String]) {
   // Iterate over operations while an operand still here
     var count = 1
@@ -76,7 +82,7 @@ class Calculate {
         let left = Double(operationsToReduce[count - 1])!
         let operand = operationsToReduce[count]
         let right = Double(operationsToReduce[count + 1 ])!
-    var result: Double
+        var result: Double
           switch operand {
           case "*": result = Double(left * right)
           case "/": result = Double(left / right)
@@ -90,10 +96,9 @@ class Calculate {
           default:
             NotificationCenter.default.post(name: .error, object: nil,
             userInfo: ["error": CalculErrors.isIncorrect])
-          operationString = "error"
-          result = 0
+            operationString = "error"
+            result = 0
           }
-  // print(result)
           operationsToReduce.remove(at: count)
           operationsToReduce.insert("\(result)", at: count)
           operationsToReduce.remove(at: count - 1)
@@ -103,6 +108,7 @@ class Calculate {
   func resetValue() {
     self.operationString = ""
   }
+  /// add operator function
   func addOperator(operators: String) {
     if expressionHaveResult {
       self.operationString = self.elements.last!
@@ -118,7 +124,7 @@ class Calculate {
       case "*":
             self.operationString += " * "
       default:
-            break
+            NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.isIncorrect])
       }
     } else {
       NotificationCenter.default.post(name: .error, object: nil, userInfo: ["error": CalculErrors.operatorIsAlredySet])

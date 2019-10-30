@@ -22,9 +22,9 @@ class ViewController: UIViewController {
  }
     // View actions
   @IBAction func tappedNumberButton(_ sender: UIButton) {
-        guard let numberText = sender.title(for: .normal)
-        else {return}
-           calculate.addNumber(numberText)
+    guard let numberText = sender.title(for: .normal)
+    else {return}
+      calculate.addNumber(numberText)
   }
   @IBAction func tappedAdditionButton(_ sender: UIButton) {
       calculate.addOperator(operators: "+")
@@ -33,26 +33,26 @@ class ViewController: UIViewController {
       calculate.addOperator(operators: "-")
   }
   @IBAction func tappedMultiplyButton(_ sender: Any) {
-     calculate.addOperator(operators: "*")
+      calculate.addOperator(operators: "*")
   }
   @IBAction func tappedDivideButton(_ sender: Any) {
-     calculate.addOperator(operators: "/")
+      calculate.addOperator(operators: "/")
   }
   @IBAction func tappedEqualButton(_ sender: UIButton) {
-     calculate.performCalculate()
+      calculate.performCalculate()
   }
   @IBAction func tappedResetButton(_ sender: UIButton) {
-       calculate.resetValue()
+      calculate.resetValue()
   }
   @IBAction func tappedCommaButton(_ sender: UIButton) {
-    calculate.operationString += "."
+      calculate.operationString += "."
   }
   // updating the text view
   @objc func updateTextView() {
     if calculate.operationString.isEmpty {
        textView.text = "0"
     } else {
-    textView.text = calculate.operationString
+       textView.text = calculate.operationString
     }
  }
   @objc func alerteNotif(_ notification: Notification) {
